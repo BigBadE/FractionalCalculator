@@ -1,0 +1,19 @@
+#Intellij
+.idea/
+*.iml
+
+#Gradle + subprojects
+.gradle/
+build/
+main/build/
+main/.gradle/
+math/build/
+math/.gradle/
+parser/build/
+parser/.gradle/
+
+#Bash scripts
+*.sh
+
+#Antlr generated
+parser/generated

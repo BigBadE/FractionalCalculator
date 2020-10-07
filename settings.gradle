@@ -1,0 +1,7 @@
+rootProject.name = 'FractionalCalculator'
+include(':main')
+project(':main').projectDir = file('main')
+include(':parser')
+project(':parser').projectDir = file('parser')
+include 'math'
+
