@@ -5,10 +5,13 @@
 #Gradle + subprojects
 .gradle/
 build/
-main/build/
-main/.gradle/
+main-input/out/
+main-input/build/
+main-input/.gradle/
+math/out/
 math/build/
 math/.gradle/
+parser/out/
 parser/build/
 parser/.gradle/
 
