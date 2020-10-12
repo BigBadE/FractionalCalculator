@@ -2,34 +2,51 @@ parser grammar FractionParser;
 
 options { tokenVocab=FractionLexer; }
 
-equation
-: (expression+ (ADDITION|SUBTRACTION|DIVISION|MULTIPLICATION|POWER) expression+)+ EOF;
+input
+: operation EOF
+| equation
+| assignment
+| value EOF;
 
-expression
-: (operation|parenthesis);
+equation
+: operation EQUALS operation;
+
+assignment
+: variable EQUALS operation;
+
+variable
+: VARIABLE;
+
+symbol
+: ADDITION|SUBTRACTION|DIVISION|MULTIPLICATION|POWER;
 
 value
-: (NUMBER|parenthesis);
+: (NUMBER|PI|E|parenthesis);
 
 parenthesis
-: OPEN_PARENTHESES expression CLOSED_PARENTHESES;
+: OPEN_PARENTHESES operation CLOSED_PARENTHESES;
 
 operation
-: (addition|subtraction|multiplication|division|power);
+: addition
+| subtraction
+| multiplication
+| division
+| power
+| parenthesis;
 
 addition
-: value ADDITION (NUMBER|parenthesis);
+: value ADDITION (value|operation);
 
 subtraction
-: value SUBTRACTION (NUMBER|parenthesis);
+: value SUBTRACTION (value|operation);
 
 division
-: value DIVISION (NUMBER|parenthesis);
+: value DIVISION (value|operation);
 
 multiplication
-: value MULTIPLICATION value
-| NUMBER parenthesis
-| parenthesis NUMBER;
+: value MULTIPLICATION (value|operation)
+| value parenthesis
+| parenthesis value;
 
 power
-: value POWER value;
+: value POWER (value|operation);

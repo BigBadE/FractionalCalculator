@@ -16,4 +16,4 @@ parser/.gradle/
 *.sh
 
 #Antlr generated
-parser/generated
+parser/src/generated
