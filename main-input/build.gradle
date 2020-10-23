@@ -3,9 +3,17 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.9'
 }
 
+repositories {
+    maven {
+        url "https://dl.bintray.com/bitstormger/maven"
+    }
+}
+
 dependencies {
+    implementation project(':math')
     implementation project(':parser')
     implementation 'org.slf4j:slf4j-simple:1.7.30'
+    implementation 'com.proudapes:jlatexmathfx:0.3.2'
 }
 
 javafx {
