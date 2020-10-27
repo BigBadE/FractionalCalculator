@@ -5,8 +5,7 @@ fragment DIGIT: [0-9];
 fragment LETTER: [a-zA-Z];
 
 //Ignore whitespace and newlines
-WHITESPACE: ' ' -> skip;
-NEWLINE: ('r'? 'n' | 'r')+ -> skip;
+WHITESPACE: (' ' | '\r' | '\t' | '\n' | '\f')+ -> skip;
 
 //Basic operators
 ADDITION: '+';
@@ -32,6 +31,6 @@ OPEN_PARENTHESES: '(';
 CLOSED_PARENTHESES: ')';
 
 //A number can have a decimal
-NUMBER: SUBTRACTION? DIGIT+ ([.,] DIGIT+)? ;
+NUMBER: DIGIT+ ([.,] DIGIT+)? ;
 
 VARIABLE: LETTER;

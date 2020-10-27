@@ -3,7 +3,8 @@ package software.bigbade.fractioncalculator.math.expressions;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import software.bigbade.fractioncalculator.math.ExpressionLogger;
+import software.bigbade.fractioncalculator.math.AnswerConsumer;
+import software.bigbade.fractioncalculator.math.graphics.IText;
 import software.bigbade.fractioncalculator.math.values.IValue;
 
 import java.util.List;
@@ -23,10 +24,7 @@ public final class SubtractionExpression implements IExpression {
 
     @Getter
     @Setter
-    private int first;
-    @Getter
-    @Setter
-    private int second;
+    private int valueIndex = -1;
 
     @Override
     public int getPriority() {
@@ -34,17 +32,27 @@ public final class SubtractionExpression implements IExpression {
     }
 
     @Override
-    public IValue operate() {
-        return subtractNumbers(values.get(first), values.get(second));
+    public IValue operate(AnswerConsumer consumer) {
+        consumer.printText("Subtract " + values.get(valueIndex+1).getValue(values) + " from "
+                + values.get(valueIndex).getValue(values) + ":");
+        return subtractNumbers(values.get(valueIndex), values.get(valueIndex+1));
     }
 
     @Override
     public String toString(List<IValue> values) {
-        return (parentheses ? "(" : "") + values.get(first).getValue(values) + " - " + values.get(second).getValue(values) + (parentheses ? ")" : "");
+        return (parentheses ? "(" : "") + values.get(valueIndex).getValue(values) + " - " + values.get(valueIndex+1).getValue(values) + (parentheses ? ")" : "");
+    }
+
+    @Override
+    public void draw(List<IText> texts, AnswerConsumer consumer) {
+        texts.get(valueIndex).render(consumer);
+        consumer.drawText("-");
+        if(texts.size() != valueIndex+1) {
+            texts.get(valueIndex + 1).render(consumer);
+        }
     }
 
     public IValue subtractNumbers(IValue first, IValue second) {
-        ExpressionLogger.getLogger().addLine("Subtract " + first.getValue(values) + " from " + second.getValue(values) + ":");
         finished = true;
         return first.subtract(second);
     }

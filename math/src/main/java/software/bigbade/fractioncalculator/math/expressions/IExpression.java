@@ -1,5 +1,7 @@
 package software.bigbade.fractioncalculator.math.expressions;
 
+import software.bigbade.fractioncalculator.math.AnswerConsumer;
+import software.bigbade.fractioncalculator.math.graphics.IText;
 import software.bigbade.fractioncalculator.math.values.IValue;
 
 import java.util.List;
@@ -9,17 +11,15 @@ public interface IExpression {
 
     int getIndex();
 
-    void setFirst(int index);
+    void setValueIndex(int index);
 
-    int getFirst();
-
-    void setSecond(int index);
-
-    int getSecond();
+    int getValueIndex();
 
     boolean isFinished();
 
-    IValue operate();
+    IValue operate(AnswerConsumer consumer);
 
     String toString(List<IValue> values);
+
+    void draw(List<IText> texts, AnswerConsumer consumer);
 }

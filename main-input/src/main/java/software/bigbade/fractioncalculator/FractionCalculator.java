@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -31,6 +32,7 @@ public class FractionCalculator extends Application {
 
         Scene scene = new Scene(root);
 
+        scene.addEventFilter(MouseEvent.MOUSE_CLICKED, controller::onClick);
         stage.setTitle("Fraction Calculator");
         stage.setScene(scene);
         stage.show();

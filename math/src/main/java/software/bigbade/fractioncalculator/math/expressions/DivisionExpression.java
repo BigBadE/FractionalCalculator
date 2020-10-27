@@ -3,7 +3,8 @@ package software.bigbade.fractioncalculator.math.expressions;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import software.bigbade.fractioncalculator.math.ExpressionLogger;
+import software.bigbade.fractioncalculator.math.AnswerConsumer;
+import software.bigbade.fractioncalculator.math.graphics.IText;
 import software.bigbade.fractioncalculator.math.values.IValue;
 
 import java.util.List;
@@ -23,10 +24,7 @@ public class DivisionExpression implements IExpression {
 
     @Getter
     @Setter
-    private int first;
-    @Getter
-    @Setter
-    private int second;
+    private int valueIndex = -1;
 
     @Override
     public int getPriority() {
@@ -34,24 +32,29 @@ public class DivisionExpression implements IExpression {
     }
 
     @Override
-    public IValue operate() {
+    public IValue operate(AnswerConsumer consumer) {
         finished = true;
-        IValue firstValue = values.get(this.first);
-        IValue secondValue = values.get(this.second);
-        ExpressionLogger.getLogger().addLine("Divide " + firstValue.getValue(values) + " by "
+        IValue firstValue = values.get(valueIndex);
+        IValue secondValue = values.get(valueIndex+1);
+        consumer.printText("Divide " + firstValue.getValue(values) + " by "
                 + secondValue.getValue(values) + ":");
         return firstValue.divide(secondValue);
     }
 
     @Override
     public String toString(List<IValue> values) {
-        IValue firstValue = values.get(first);
-        IValue secondValue = values.get(second);
+        IValue firstValue = values.get(valueIndex);
+        IValue secondValue = values.get(valueIndex+1);
         StringBuilder builder = new StringBuilder(parenthesis ? "(" : "");
         builder.append(firstValue.getValue(values)).append("/").append(secondValue.getValue(values));
         if(parenthesis) {
             builder.append(')');
         }
         return builder.toString();
+    }
+
+    @Override
+    public void draw(List<IText> texts, AnswerConsumer consumer) {
+        throw new IllegalStateException("All division expressions should be FractionValues or decimals");
     }
 }

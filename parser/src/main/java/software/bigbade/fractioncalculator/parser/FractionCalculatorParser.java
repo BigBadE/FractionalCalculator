@@ -2,69 +2,91 @@ package software.bigbade.fractioncalculator.parser;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.slf4j.Logger;
 import software.bigbade.fractioncalculator.generated.FractionLexer;
 import software.bigbade.fractioncalculator.generated.FractionParser;
-import software.bigbade.fractioncalculator.math.ExpressionLogger;
+import software.bigbade.fractioncalculator.math.AnswerConsumer;
 import software.bigbade.fractioncalculator.math.expressions.IExpression;
 import software.bigbade.fractioncalculator.math.values.IValue;
 import software.bigbade.fractioncalculator.parser.listener.CalculatorParserListener;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @RequiredArgsConstructor
 public class FractionCalculatorParser {
     private final Logger logger;
-
-    @Getter
-    private List<IValue> values;
-    @Getter
-    private Set<IExpression> expressions;
-
     private final CalculatorParserListener listener = new CalculatorParserListener();
+    @Getter
+    private List<IValue> values = Collections.emptyList();
+    @Getter
+    private Set<IExpression> expressions = Collections.emptySet();
 
     public void parse(String line) {
         FractionLexer lexer = new FractionLexer(CharStreams.fromString(line));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         FractionParser parser = new FractionParser(tokens);
-        for(ParseTree tree : parser.input().children) {
-            ParseTreeWalker.DEFAULT.walk(listener, tree);
+        parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
+        System.out.println(line);
+        try {
+            walkTree(parser.input().children);
+        } catch (Exception ex) {
+            tokens.seek(0); // rewind input stream
+            parser.reset();
+            parser.getInterpreter().setPredictionMode(PredictionMode.LL);
+            walkTree(parser.input().children);
+        }
+        if (parser.input().children == null) {
+            return;
         }
 
-        for(Map.Entry<String, Exception> error : ExpressionLogger.getLogger().getExceptions().entrySet()) {
-            logger.error(error.getKey(), error.getValue());
+
+        expressions = listener.getExpressions();
+        values = listener.getValues();
+    }
+
+    private void walkTree(List<ParseTree> trees) {
+        if(trees.isEmpty()) {
+            return;
+        }
+        try {
+            for(ParseTree tree : trees) {
+                ParseTreeWalker.DEFAULT.walk(listener, tree);
+            }
+        } catch (Exception e) {
+            //Ignore errors so we can have live parsing
         }
     }
 
-    public String calculate() {
+    public void calculate(AnswerConsumer consumer) {
+        for(IExpression expression : listener.getExpressions()) {
+            if(expression.getValueIndex() == -1) {
+                consumer.printText("Invalid input");
+                return;
+            }
+        }
         Iterator<IExpression> iterator = listener.getExpressions().iterator();
         while (iterator.hasNext()) {
             IExpression expression = iterator.next();
-            listener.setValue(expression.operate(), expression.getFirst());
-            listener.removeValue(expression.getSecond());
-            if(expression.isFinished()) {
+            listener.setValue(expression.operate(consumer), expression.getValueIndex());
+            listener.removeValue(expression.getValueIndex()+1);
+            if (expression.isFinished()) {
                 iterator.remove();
             }
-            ExpressionLogger.getLogger().printCurrentEquation(listener.getExpressions(), listener.getValues());
+            consumer.printEquation(listener.getExpressions(), listener.getValues());
         }
 
         expressions = listener.getExpressions();
         values = listener.getValues();
 
-
-        ExpressionLogger.getLogger().addLine("Answer: ");
-        ExpressionLogger.getLogger().printCurrentEquation(listener.getExpressions(), listener.getValues());
-
-        String output = ExpressionLogger.getLogger().getOutput();
-        ExpressionLogger.getLogger().clear();
-        return output.substring(0, output.length()-1);
+        consumer.printText("Answer: ");
+        consumer.printEquation(listener.getExpressions(), listener.getValues());
     }
 }

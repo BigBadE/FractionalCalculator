@@ -31,4 +31,5 @@ compileJava.source = sourceSets.generated.java + sourceSets.main.java
 
 clean.doFirst {
     delete generatedDirectory
+    delete 'src/main/gen'
 }
