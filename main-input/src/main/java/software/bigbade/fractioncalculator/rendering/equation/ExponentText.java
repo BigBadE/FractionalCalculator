@@ -20,6 +20,10 @@ public class ExponentText implements IText {
 
     @Override
     public void render(AnswerConsumer consumer) {
+        if(drawn) {
+            return;
+        }
+
         drawn = true;
 
         if(base != null) {

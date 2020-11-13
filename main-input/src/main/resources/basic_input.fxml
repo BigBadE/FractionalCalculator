@@ -5,6 +5,7 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
@@ -15,7 +16,7 @@
 <?import java.lang.String?>
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
       prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
-    <ChoiceBox layoutX="48.0" layoutY="70.0" prefHeight="36.0" prefWidth="91.0" value="Solve">
+    <ChoiceBox layoutX="48.0" layoutY="57.0" prefHeight="50.0" prefWidth="91.0" value="Solve">
         <items>
             <FXCollections fx:factory="observableArrayList">
                 <String fx:value="Solve"/>
@@ -41,9 +42,8 @@
             prefHeight="36.0" prefWidth="26.0" text="»"/>
     <TabPane layoutX="48.0" layoutY="106.0" prefHeight="246.0" prefWidth="505.0" tabClosingPolicy="UNAVAILABLE">
         <Tab text="Solving">
-            <StackPane fx:id="output" layoutX="48.0" layoutY="245.0" maxHeight="1.7976931348623157E308"
-                      prefHeight="214.0" prefWidth="505.0">
-            </StackPane>
+            <ScrollPane fx:id="output" layoutX="48.0" layoutY="106.0" prefHeight="246.0"
+                        prefWidth="505.0" maxHeight="-Infinity" maxWidth="-Infinity"/>
         </Tab>
         <Tab text="Graph">
             <LineChart fx:id="lineGraph" createSymbols="false" legendVisible="false" prefHeight="372.0"
@@ -63,9 +63,9 @@
         <Tab text="Functions">
         </Tab>
     </TabPane>
-    <Button layoutX="506.0" layoutY="70.0" minWidth="20.0" mnemonicParsing="false" onAction="#onEnter" prefHeight="36.0"
+    <Button layoutX="506.0" layoutY="57.0" minWidth="20.0" mnemonicParsing="false" onAction="#onEnter" prefHeight="50.0"
             prefWidth="48.0" text="Go"/>
-    <AnchorPane layoutX="139.0" layoutY="70.0" minHeight="0.0" minWidth="0.0" prefHeight="36.0" prefWidth="367.0">
-        <StackPane fx:id="equation" layoutX="4.0" layoutY="4.0" prefHeight="25.0" prefWidth="358.0"/>
+    <AnchorPane layoutX="139.0" layoutY="56.0" minHeight="0.0" minWidth="0.0" prefHeight="50.0" prefWidth="367.0">
+        <ScrollPane fx:id="equation" prefHeight="50.0" prefWidth="367.0" vbarPolicy="NEVER"/>
     </AnchorPane>
 </Pane>

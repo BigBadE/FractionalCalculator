@@ -24,7 +24,7 @@ allprojects {
     targetCompatibility = 1.8
 
     lombok {
-        version = '1.18.12'
+        version = '1.18.16'
         sha256 = ''
     }
 
@@ -57,8 +57,7 @@ allprojects {
 
     dependencies {
         shadow 'com.google.code.findbugs:jsr305:3.0.2'
-
-        testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.6.2'
+        testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
     }
 
     test.useTestNG()

@@ -6,6 +6,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import lombok.Getter;
 import lombok.Setter;
+import software.bigbade.fractioncalculator.input.LatexCanvas;
 import software.bigbade.fractioncalculator.math.AnswerConsumer;
 import software.bigbade.fractioncalculator.math.expressions.IExpression;
 import software.bigbade.fractioncalculator.math.graphics.IText;
@@ -22,20 +23,24 @@ import java.util.Set;
 public class LatexDrawing implements AnswerConsumer {
     private static final String FONT = "Droid Sans";
 
+    private final LatexCanvas canvas;
     private final GraphicsContext context;
 
     private double width;
     private double height;
 
     @Getter
-    private int yOffset;
+    private double yOffset;
     @Getter
-    private int xOffset;
+    private double xOffset;
 
-    public LatexDrawing(GraphicsContext context, double width, double height) {
-        context.setFont(Font.font(FONT, 15));
+    public LatexDrawing(LatexCanvas canvas, double width, double height) {
+        context = canvas.getGraphicsContext2D();
 
-        this.context = context;
+        context.setFont(Font.font(FONT, 18));
+
+        System.out.println("Font size: " + context.getFont().getSize());
+        this.canvas = canvas;
         this.width = width;
         this.height = height;
 
@@ -44,9 +49,9 @@ public class LatexDrawing implements AnswerConsumer {
 
     public void clear() {
         context.setFill(Color.WHITE);
-        context.fillRect(0, 0, width, height);
-        yOffset = 14;
+        context.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
         xOffset = 4;
+        yOffset = getTextSize();
     }
 
     @Override
@@ -55,20 +60,25 @@ public class LatexDrawing implements AnswerConsumer {
         context.setFill(Color.BLACK);
         drawText(text);
         yOffset += getTextSize();
+        if(!canvas.heightProperty().isBound()) {
+            canvas.setHeight(Math.max(height, yOffset));
+        }
     }
 
     @Override
     public void drawText(String text) {
         context.setFill(Color.BLACK);
-        context.fillText(text, xOffset, yOffset);
         xOffset += getTextWidth(text);
+        canvas.setWidth(Math.max(xOffset, width));
+        context.fillText(text, xOffset, yOffset);
     }
 
     @Override
     public void drawText(String text, int xOffset, int yOffset) {
         context.setFill(Color.BLACK);
-        context.fillText(text, xOffset, yOffset);
         this.xOffset += getTextWidth(text);
+        canvas.setWidth(Math.max(this.xOffset, width));
+        context.fillText(text, xOffset, yOffset);
     }
 
     @Override
@@ -95,7 +105,7 @@ public class LatexDrawing implements AnswerConsumer {
     }
 
     @Override
-    public void drawLine(int x1, int y1, int x2, int y2) {
+    public void drawLine(double x1, double y1, double x2, double y2) {
         context.setStroke(Color.BLACK);
         context.strokeLine(x1, y1, x2, y2);
     }
@@ -125,6 +135,11 @@ public class LatexDrawing implements AnswerConsumer {
             }
         }
         yOffset += context.getFont().getSize() * 2;
+        canvas.setWidth(Math.max(xOffset, width));
+
+        if(!canvas.heightProperty().isBound()) {
+            canvas.setHeight(Math.max(height, yOffset));
+        }
     }
 
     public IText parseValue(List<IValue> values, IValue value) {

@@ -19,4 +19,4 @@ parser/.gradle/
 *.sh
 
 #Antlr generated
-parser/src/generated
+parser/src/main/gen

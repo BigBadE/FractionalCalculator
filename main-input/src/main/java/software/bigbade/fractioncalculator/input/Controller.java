@@ -1,14 +1,12 @@
 package software.bigbade.fractioncalculator.input;
 
 import javafx.fxml.FXML;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.chart.LineChart;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import lombok.Getter;
 import software.bigbade.fractioncalculator.FractionCalculator;
 import software.bigbade.fractioncalculator.parser.FractionCalculatorParser;
@@ -21,18 +19,19 @@ import java.util.WeakHashMap;
 public class Controller {
     //Prevents crashes from lack of memory if too many equations were entered.
     private final Map<Integer, String> previousOutputs = new WeakHashMap<>();
+
     @FXML
-    private StackPane equation;
+    private ScrollPane equation;
     @FXML
-    private StackPane output;
+    private ScrollPane output;
     @FXML
     private TextArea currentEquation;
     @FXML
     private LineChart<Double, Double> lineGraph;
 
     private GraphHandler graphHandler;
-    private LatexCanvas canvas;
     private LatexCanvas outputCanvas;
+    private LatexCanvas canvas;
 
     @Getter
     private int current = 0;
@@ -41,23 +40,30 @@ public class Controller {
     public void initialize() {
         graphHandler = new GraphHandler(lineGraph);
         canvas = new LatexCanvas(this, equation, true);
-        equation.getChildren().add(canvas);
+
+        equation.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+            equation.requestFocus();
+            canvas.startCursor();
+        });
+        equation.addEventFilter(KeyEvent.KEY_TYPED, canvas::onKeyTyped);
+        equation.addEventFilter(KeyEvent.KEY_PRESSED, canvas::onKeyPressed);
+
+        equation.hvalueProperty().addListener(observable -> canvas.update());
+
+        canvas.update();
+        equation.setContent(canvas);
+
+        equation.setFocusTraversable(true);
+
         outputCanvas = new LatexCanvas(this, output, false);
-        output.getChildren().add(outputCanvas);
-        outputCanvas.widthProperty().bind(output.widthProperty());
-        outputCanvas.heightProperty().bind(output.heightProperty());
-
-        GraphicsContext context = outputCanvas.getGraphicsContext2D();
-        context.setFill(Color.WHITE);
-        context.fillRect(0, 0, outputCanvas.getWidth(), outputCanvas.getHeight());
-
-        canvas.widthProperty().bind(equation.widthProperty());
-        canvas.heightProperty().bind(equation.heightProperty());
+        outputCanvas.update();
+        output.hvalueProperty().addListener(observable -> outputCanvas.update());
+        output.vvalueProperty().addListener(observable -> outputCanvas.update());
+        output.setContent(outputCanvas);
     }
 
     public void onClick(MouseEvent event) {
-        if(!canvas.isFocused()) {
-            canvas.setEffect(null);
+        if(!equation.isFocused()) {
             canvas.stopCursor();
         }
     }
@@ -106,7 +112,7 @@ public class Controller {
 
         FractionCalculator.getLogger().info("Calculating " + canvas.getText());
         parser.parse(previousOutputs.get(current - 1));
-        LatexDrawing drawing = new LatexDrawing(outputCanvas.getGraphicsContext2D(), outputCanvas.getWidth(), outputCanvas.getHeight());
+        LatexDrawing drawing = new LatexDrawing(outputCanvas, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
         drawing.clear();
         parser.calculate(drawing);
 

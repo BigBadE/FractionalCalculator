@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.atn.PredictionMode;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.slf4j.Logger;
@@ -33,16 +32,7 @@ public class FractionCalculatorParser {
         FractionLexer lexer = new FractionLexer(CharStreams.fromString(line));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         FractionParser parser = new FractionParser(tokens);
-        parser.getInterpreter().setPredictionMode(PredictionMode.SLL);
-        System.out.println(line);
-        try {
-            walkTree(parser.input().children);
-        } catch (Exception ex) {
-            tokens.seek(0); // rewind input stream
-            parser.reset();
-            parser.getInterpreter().setPredictionMode(PredictionMode.LL);
-            walkTree(parser.input().children);
-        }
+        walkTree(parser.input().children);
         if (parser.input().children == null) {
             return;
         }
@@ -53,11 +43,11 @@ public class FractionCalculatorParser {
     }
 
     private void walkTree(List<ParseTree> trees) {
-        if(trees.isEmpty()) {
+        if (trees.isEmpty()) {
             return;
         }
         try {
-            for(ParseTree tree : trees) {
+            for (ParseTree tree : trees) {
                 ParseTreeWalker.DEFAULT.walk(listener, tree);
             }
         } catch (Exception e) {
@@ -66,8 +56,8 @@ public class FractionCalculatorParser {
     }
 
     public void calculate(AnswerConsumer consumer) {
-        for(IExpression expression : listener.getExpressions()) {
-            if(expression.getValueIndex() == -1) {
+        for (IExpression expression : listener.getExpressions()) {
+            if (expression.getValueIndex() == -1) {
                 consumer.printText("Invalid input");
                 return;
             }
@@ -76,7 +66,7 @@ public class FractionCalculatorParser {
         while (iterator.hasNext()) {
             IExpression expression = iterator.next();
             listener.setValue(expression.operate(consumer), expression.getValueIndex());
-            listener.removeValue(expression.getValueIndex()+1);
+            listener.removeValue(expression.getValueIndex() + 1);
             if (expression.isFinished()) {
                 iterator.remove();
             }

@@ -20,14 +20,18 @@ public class FractionText implements IText {
 
     @Override
     public void render(AnswerConsumer consumer) {
+        if(drawn) {
+            return;
+        }
+
         drawn = true;
         consumer.setTextSize(consumer.getTextSize()/2);
-        int currentXOffset = consumer.getXOffset();
-        int currentYOffset = consumer.getYOffset();
+        double currentXOffset = consumer.getXOffset();
+        double currentYOffset = consumer.getYOffset();
         if(numerator != null) {
             numerator.render(consumer);
         }
-        int offset = consumer.getXOffset();
+        double offset = consumer.getXOffset();
         consumer.setXOffset(currentXOffset);
         consumer.setYOffset((int) (currentYOffset+consumer.getTextSize()/2));
         if(denominator != null) {

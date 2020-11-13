@@ -19,17 +19,17 @@ public interface AnswerConsumer {
 
     double getTextWidth(String text);
 
-    int getXOffset();
+    double getXOffset();
 
-    void setXOffset(int x);
+    void setXOffset(double x);
 
-    int getYOffset();
+    double getYOffset();
 
-    void setYOffset(int y);
+    void setYOffset(double y);
 
     void setTextSize(double size);
 
-    void drawLine(int x1, int y1, int x2, int y2);
+    void drawLine(double x1, double y1, double x2, double y2);
 
     void printEquation(Set<IExpression> expressions, List<IValue> values);
 }

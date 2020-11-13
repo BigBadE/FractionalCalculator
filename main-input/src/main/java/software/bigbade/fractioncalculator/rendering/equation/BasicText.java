@@ -15,6 +15,10 @@ public class BasicText implements IText {
 
     @Override
     public void render(AnswerConsumer consumer) {
+        if (drawn) {
+            return;
+        }
+
         drawn = true;
         consumer.drawText(text);
     }
