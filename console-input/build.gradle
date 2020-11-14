@@ -1,0 +1,4 @@
+dependencies {
+    implementation project(':math')
+    implementation project(':parser')
+}
