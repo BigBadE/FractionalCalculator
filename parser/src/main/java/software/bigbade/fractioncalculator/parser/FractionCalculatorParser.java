@@ -10,9 +10,12 @@ import software.bigbade.fractioncalculator.generated.FractionLexer;
 import software.bigbade.fractioncalculator.generated.FractionParser;
 import software.bigbade.fractioncalculator.math.AnswerConsumer;
 import software.bigbade.fractioncalculator.math.expressions.IExpression;
+import software.bigbade.fractioncalculator.math.simplification.ISimplifier;
+import software.bigbade.fractioncalculator.math.simplification.SimplifyImproperFractions;
 import software.bigbade.fractioncalculator.math.values.IValue;
 import software.bigbade.fractioncalculator.parser.listener.CalculatorParserListener;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -21,6 +24,9 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class FractionCalculatorParser {
     private final CalculatorParserListener listener = new CalculatorParserListener();
+    @SuppressWarnings("ArraysAsListWithZeroOrOneArgument")
+    private final List<ISimplifier> simplifiers = Arrays.asList(new SimplifyImproperFractions());
+
     @Getter
     private List<IValue> values = Collections.emptyList();
     @Getter
@@ -60,8 +66,10 @@ public class FractionCalculatorParser {
                 return;
             }
         }
+
         Iterator<IExpression> iterator = listener.getExpressions().iterator();
         while (iterator.hasNext()) {
+            System.out.println("Expression");
             IExpression expression = iterator.next();
             listener.setValue(expression.operate(consumer), expression.getValueIndex());
             listener.removeValue(expression.getValueIndex() + 1);
@@ -69,8 +77,23 @@ public class FractionCalculatorParser {
             consumer.printEquation(listener.getExpressions(), listener.getValues());
         }
 
-        expressions = listener.getExpressions();
         values = listener.getValues();
+
+        boolean found = true;
+        while (found) {
+            found = false;
+            for(ISimplifier simplifier : simplifiers) {
+                for(int i = 0; i < values.size(); i++) {
+                    IValue value = values.get(i);
+                    if(simplifier.matches(value)) {
+                        values.set(i, simplifier.simplify(value, consumer));
+                        found = true;
+                    }
+                }
+            }
+        }
+
+        expressions = listener.getExpressions();
 
         consumer.printText("Answer: ");
         consumer.printEquation(listener.getExpressions(), listener.getValues());

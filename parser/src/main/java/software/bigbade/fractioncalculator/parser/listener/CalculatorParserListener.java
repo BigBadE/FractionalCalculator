@@ -27,15 +27,26 @@ public class CalculatorParserListener extends FractionParserBaseListener {
     @Getter
     private final Set<IExpression> expressions = new TreeSet<>((first, second) -> {
         if (first.getPriority() == second.getPriority()) {
-            return Integer.compare(first.getIndex(), second.getIndex());
+            return compare(first.getIndex(), second.getIndex());
         }
-        return Integer.compare(second.getPriority(), first.getPriority());
+        return compare(second.getPriority(), first.getPriority());
     });
 
     private int index = 0;
     private int expressionIndex = 0;
 
     private IExpression current;
+
+    @SuppressWarnings("UseCompareMethod")
+    private static int compare(int first, int second) {
+        if(first > second) {
+            return 1;
+        } else if(second > first) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
 
     public void setValue(IValue value, int index) {
         values.set(index, value);
@@ -57,7 +68,6 @@ public class CalculatorParserListener extends FractionParserBaseListener {
         }
 
         current = new AdditionExpression(values, expressionIndex++, isParenthesis(ctx));
-        super.enterAddition(ctx);
     }
 
     @Override
@@ -67,7 +77,6 @@ public class CalculatorParserListener extends FractionParserBaseListener {
         }
 
         current = new SubtractionExpression(values, expressionIndex++, isParenthesis(ctx));
-        super.enterSubtraction(ctx);
     }
 
     @Override
@@ -77,7 +86,6 @@ public class CalculatorParserListener extends FractionParserBaseListener {
         }
 
         current = new MultiplicationExpression(values, expressionIndex++, isParenthesis(ctx));
-        super.enterMultiplication(ctx);
     }
 
     @Override
@@ -87,7 +95,6 @@ public class CalculatorParserListener extends FractionParserBaseListener {
         }
 
         current = new DivisionExpression(values, expressionIndex++, isParenthesis(ctx));
-        super.enterDivision(ctx);
     }
 
     private static boolean isParenthesis(ParserRuleContext context) {
@@ -101,6 +108,7 @@ public class CalculatorParserListener extends FractionParserBaseListener {
 
     @Override
     public void exitValue(FractionParser.ValueContext ctx) {
+        System.out.println("TEST: " + ctx.getText());
         if (ctx.NUMBER() != null) {
             values.add(new NumberValue(new BigDecimal(ctx.getText())));
         }
@@ -109,10 +117,8 @@ public class CalculatorParserListener extends FractionParserBaseListener {
             values.add(new MixedNumberValue(new NumberValue(number),
                     (FractionValue) values.get(values.size()-1)));
             values.remove(values.size()-1);
-            values.remove(values.size()-1);
         }
         if(current == null) {
-            super.exitValue(ctx);
             return;
         }
         ParserRuleContext context = ctx;
@@ -122,7 +128,6 @@ public class CalculatorParserListener extends FractionParserBaseListener {
         if(current.getValueIndex() == -1) {
             current.setValueIndex(index++);
         }
-        super.exitValue(ctx);
     }
 
     @Override
@@ -130,7 +135,5 @@ public class CalculatorParserListener extends FractionParserBaseListener {
         if(current != null) {
             expressions.add(current);
         }
-
-        super.exitOperation(ctx);
     }
 }

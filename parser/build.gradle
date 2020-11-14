@@ -1,6 +1,6 @@
 apply plugin: 'antlr'
 
-def generatedDirectory = "${buildDir}/build/src-generated"
+def generatedDirectory = "${buildDir}/src-generated"
 
 dependencies {
     antlr "org.antlr:antlr4:4.7.2"

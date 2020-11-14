@@ -27,8 +27,8 @@ public class NumberValue implements IValue {
     public IValue add(IValue other) {
         if (other instanceof NumberValue) {
             return new NumberValue(numericValue.add(((NumberValue) other).numericValue));
-        } else if (other instanceof FractionValue) {
-            other.add(this);
+        } else if (other instanceof FractionValue || other instanceof MixedNumberValue) {
+            return other.add(this);
         }
         throw new IllegalArgumentException(UNIMPLEMENTED_OPERATION);
     }
@@ -37,6 +37,8 @@ public class NumberValue implements IValue {
     public IValue subtract(IValue other) {
         if (other instanceof NumberValue) {
             return new NumberValue(numericValue.subtract(((NumberValue) other).numericValue));
+        } else if(other instanceof FractionValue || other instanceof MixedNumberValue) {
+            return other.add(this);
         }
         throw new IllegalArgumentException(UNIMPLEMENTED_OPERATION);
     }
@@ -45,7 +47,7 @@ public class NumberValue implements IValue {
     public IValue multiply(IValue other) {
         if (other instanceof NumberValue) {
             return new NumberValue(numericValue.multiply(((NumberValue) other).numericValue));
-        } else if (other instanceof FractionValue) {
+        } else if (other instanceof FractionValue || other instanceof MixedNumberValue) {
             return other.multiply(this);
         }
         throw new IllegalArgumentException(UNIMPLEMENTED_OPERATION);
@@ -55,9 +57,8 @@ public class NumberValue implements IValue {
     public IValue divide(IValue other) {
         if (other instanceof NumberValue) {
             return new NumberValue(numericValue.divide(((NumberValue) other).numericValue, MathContext.DECIMAL32));
-        } else if (other instanceof FractionValue) {
-            FractionValue otherFraction = (FractionValue) other;
-            return new FractionValue(otherFraction.getDenominator().multiply(this), otherFraction.getNumerator(), false);
+        } else if (other instanceof FractionValue || other instanceof MixedNumberValue) {
+            return other.divide(this);
         }
         throw new IllegalArgumentException(UNIMPLEMENTED_OPERATION);
     }

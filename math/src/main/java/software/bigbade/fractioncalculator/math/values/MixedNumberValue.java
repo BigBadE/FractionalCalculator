@@ -1,7 +1,6 @@
 package software.bigbade.fractioncalculator.math.values;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public class MixedNumberValue implements IValue {
     private NumberValue number;
@@ -58,13 +57,12 @@ public class MixedNumberValue implements IValue {
     @Override
     public IValue multiply(IValue other) {
         if(other instanceof NumberValue) {
-            number = (NumberValue) number.multiply(other);
-            fraction = (FractionValue) fraction.multiply(other);
+            fraction.getNumerator().add(fraction.getDenominator().multiply(number).multiply(other));
         } else if(other instanceof FractionValue) {
             fraction = (FractionValue) fraction.multiply(other);
         } else if(other instanceof MixedNumberValue) {
-            number = (NumberValue) number.subtract(other);
-            fraction = (FractionValue) fraction.subtract(other);
+            fraction = new FractionValue(fraction.getNumerator().add(fraction.getDenominator().multiply(number).multiply(other)),
+                    fraction.getDenominator(), false);
         } else {
             throw new IllegalArgumentException(NumberValue.UNIMPLEMENTED_OPERATION);
         }

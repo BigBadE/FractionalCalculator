@@ -26,7 +26,14 @@ public class FractionValue implements IValue {
 
     @Override
     public IValue divide(IValue other) {
-        return null;
+        if(other instanceof NumberValue) {
+            return new FractionValue(getDenominator().multiply(other), getNumerator(), false);
+        } else if(other instanceof FractionValue) {
+
+        } else if(other instanceof MixedNumberValue) {
+            return other.divide(this);
+        }
+        throw new IllegalArgumentException(NumberValue.UNIMPLEMENTED_OPERATION);
     }
 
     @Override
@@ -37,13 +44,22 @@ public class FractionValue implements IValue {
             FractionValue second = (FractionValue) other;
             return new FractionValue(numerator.multiply(second.numerator),
                     denominator.multiply(second.denominator), parenthesis);
+        } else if (other instanceof MixedNumberValue) {
+            return other.multiply(this);
         }
         throw new IllegalArgumentException(NumberValue.UNIMPLEMENTED_OPERATION);
     }
 
     @Override
     public IValue subtract(IValue other) {
-        return null;
+        if(other instanceof NumberValue) {
+            return new FractionValue(numerator.subtract(denominator.multiply(other)), denominator, parenthesis);
+        } else if(other instanceof FractionValue) {
+
+        } else if(other instanceof MixedNumberValue) {
+            return other.subtract(this);
+        }
+        throw new IllegalArgumentException(NumberValue.UNIMPLEMENTED_OPERATION);
     }
 
     @Override
@@ -55,6 +71,8 @@ public class FractionValue implements IValue {
             return new FractionValue(numerator.multiply(otherFraction.denominator)
                     .add(otherFraction.numerator.multiply(denominator)),
                     denominator.multiply(otherFraction.denominator), parenthesis);
+        } else if (other instanceof MixedNumberValue) {
+            return other.add(this);
         }
         throw new IllegalArgumentException(NumberValue.UNIMPLEMENTED_OPERATION);
     }
