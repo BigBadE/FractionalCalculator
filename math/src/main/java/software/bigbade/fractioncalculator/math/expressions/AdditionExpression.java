@@ -20,9 +20,6 @@ public final class AdditionExpression implements IExpression {
     private final boolean parentheses;
 
     @Getter
-    private boolean finished = false;
-
-    @Getter
     @Setter
     private int valueIndex = -1;
 
@@ -33,14 +30,14 @@ public final class AdditionExpression implements IExpression {
 
     @Override
     public IValue operate(AnswerConsumer consumer) {
-        consumer.printText("Add " + values.get(valueIndex).getValue(values) + " to "
-                + values.get(valueIndex+1).getValue(values) + ":");
-        return addNumbers(values.get(valueIndex), values.get(valueIndex+1));
+        consumer.printText("Add " + values.get(valueIndex).getValue() + " to "
+                + values.get(valueIndex+1).getValue() + ":");
+        return values.get(valueIndex).add(values.get(valueIndex+1));
     }
 
     @Override
     public String toString(List<IValue> values) {
-        return (parentheses ? "(" : "") + values.get(valueIndex).getValue(values) + " + " + values.get(valueIndex+1).getValue(values) + (parentheses ? ")" : "");
+        return (parentheses ? "(" : "") + values.get(valueIndex).getValue() + " + " + values.get(valueIndex+1).getValue() + (parentheses ? ")" : "");
     }
 
     @Override
@@ -50,10 +47,5 @@ public final class AdditionExpression implements IExpression {
         if(texts.size() != valueIndex+1) {
             texts.get(valueIndex+1).render(consumer);
         }
-    }
-
-    public IValue addNumbers(IValue first, IValue second) {
-        finished = true;
-        return first.add(second);
     }
 }

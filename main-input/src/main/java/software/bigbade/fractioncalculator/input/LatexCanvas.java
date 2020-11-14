@@ -1,18 +1,13 @@
 package software.bigbade.fractioncalculator.input;
 
 import javafx.animation.AnimationTimer;
-import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import lombok.Getter;
-import software.bigbade.fractioncalculator.FractionCalculator;
 import software.bigbade.fractioncalculator.parser.FractionCalculatorParser;
 import software.bigbade.fractioncalculator.rendering.LatexDrawing;
 
@@ -99,7 +94,7 @@ public class LatexCanvas extends Canvas {
         drawing.clear();
         pane.setContent(this);
         if(text.length() != 0) {
-            FractionCalculatorParser parser = new FractionCalculatorParser(FractionCalculator.getLogger());
+            FractionCalculatorParser parser = new FractionCalculatorParser();
             parser.parse(text.toString());
             drawing.printEquation(parser.getExpressions(), parser.getValues());
         }

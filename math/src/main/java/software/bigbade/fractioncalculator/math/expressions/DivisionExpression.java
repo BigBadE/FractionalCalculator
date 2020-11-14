@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import software.bigbade.fractioncalculator.math.AnswerConsumer;
 import software.bigbade.fractioncalculator.math.graphics.IText;
+import software.bigbade.fractioncalculator.math.values.FractionValue;
 import software.bigbade.fractioncalculator.math.values.IValue;
 
 import java.util.List;
@@ -20,9 +21,6 @@ public class DivisionExpression implements IExpression {
     private final boolean parenthesis;
 
     @Getter
-    private boolean finished = false;
-
-    @Getter
     @Setter
     private int valueIndex = -1;
 
@@ -33,12 +31,11 @@ public class DivisionExpression implements IExpression {
 
     @Override
     public IValue operate(AnswerConsumer consumer) {
-        finished = true;
         IValue firstValue = values.get(valueIndex);
         IValue secondValue = values.get(valueIndex+1);
-        consumer.printText("Divide " + firstValue.getValue(values) + " by "
-                + secondValue.getValue(values) + ":");
-        return firstValue.divide(secondValue);
+        consumer.printText("Convert " + firstValue.getValue() + '/'
+                + secondValue.getValue() + " to a fraction:");
+        return new FractionValue(firstValue, secondValue, parenthesis);
     }
 
     @Override
@@ -46,7 +43,7 @@ public class DivisionExpression implements IExpression {
         IValue firstValue = values.get(valueIndex);
         IValue secondValue = values.get(valueIndex+1);
         StringBuilder builder = new StringBuilder(parenthesis ? "(" : "");
-        builder.append(firstValue.getValue(values)).append("/").append(secondValue.getValue(values));
+        builder.append(firstValue.getValue()).append('/').append(secondValue.getValue());
         if(parenthesis) {
             builder.append(')');
         }

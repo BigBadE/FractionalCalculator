@@ -9,7 +9,9 @@ import software.bigbade.fractioncalculator.math.expressions.DivisionExpression;
 import software.bigbade.fractioncalculator.math.expressions.IExpression;
 import software.bigbade.fractioncalculator.math.expressions.MultiplicationExpression;
 import software.bigbade.fractioncalculator.math.expressions.SubtractionExpression;
+import software.bigbade.fractioncalculator.math.values.FractionValue;
 import software.bigbade.fractioncalculator.math.values.IValue;
+import software.bigbade.fractioncalculator.math.values.MixedNumberValue;
 import software.bigbade.fractioncalculator.math.values.NumberValue;
 
 import java.math.BigDecimal;
@@ -85,10 +87,10 @@ public class CalculatorParserListener extends FractionParserBaseListener {
         }
 
         current = new DivisionExpression(values, expressionIndex++, isParenthesis(ctx));
-        super.exitDivision(ctx);
+        super.enterDivision(ctx);
     }
 
-    private boolean isParenthesis(ParserRuleContext context) {
+    private static boolean isParenthesis(ParserRuleContext context) {
         while ((context = context.getParent()) != null) {
             if (context instanceof FractionParser.ParenthesisContext) {
                 return true;
@@ -101,6 +103,13 @@ public class CalculatorParserListener extends FractionParserBaseListener {
     public void exitValue(FractionParser.ValueContext ctx) {
         if (ctx.NUMBER() != null) {
             values.add(new NumberValue(new BigDecimal(ctx.getText())));
+        }
+        if (ctx.mixedNumber() != null) {
+            BigDecimal number = new BigDecimal(ctx.mixedNumber().getText());
+            values.add(new MixedNumberValue(new NumberValue(number),
+                    (FractionValue) values.get(values.size()-1)));
+            values.remove(values.size()-1);
+            values.remove(values.size()-1);
         }
         if(current == null) {
             super.exitValue(ctx);

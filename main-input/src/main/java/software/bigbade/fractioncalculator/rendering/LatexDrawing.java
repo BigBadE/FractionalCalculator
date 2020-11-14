@@ -118,7 +118,7 @@ public class LatexDrawing implements AnswerConsumer {
         }
 
         if (values.size() == 1 && expressions.isEmpty()) {
-            printText(values.get(0).getValue(values));
+            printText(values.get(0).getValue());
         } else {
             List<IText> text = new ArrayList<>();
             for (IValue value : values) {
@@ -148,7 +148,7 @@ public class LatexDrawing implements AnswerConsumer {
             return new FractionText(parseValue(values, fractionValue.getNumerator()),
                     parseValue(values, fractionValue.getDenominator()));
         } else {
-            return value == null ? null : new BasicText(value.getValue(values));
+            return value == null ? null : new BasicText(value.getValue());
         }
     }
 }

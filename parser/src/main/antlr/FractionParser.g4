@@ -19,7 +19,10 @@ variable
 : VARIABLE;
 
 value
-: SUBTRACTION? (NUMBER|PI|E|parenthesis);
+: SUBTRACTION? (NUMBER|PI|E|parenthesis|mixedNumber);
+
+mixedNumber
+: SUBTRACTION? NUMBER UNDERSCORE division;
 
 parenthesis
 : OPEN_PARENTHESES operation CLOSED_PARENTHESES?;

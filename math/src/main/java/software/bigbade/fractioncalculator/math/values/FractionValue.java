@@ -3,7 +3,7 @@ package software.bigbade.fractioncalculator.math.values;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 @RequiredArgsConstructor
 public class FractionValue implements IValue {
@@ -12,9 +12,16 @@ public class FractionValue implements IValue {
     @Getter
     private final IValue denominator;
 
+    private final boolean parenthesis;
+
     @Override
-    public String getValue(List<IValue> values) {
-        return numerator.getValue(values) + "/" + denominator.getValue(values);
+    public BigDecimal getDecimalValue() {
+        return numerator.divide(denominator).getDecimalValue();
+    }
+
+    @Override
+    public String getValue() {
+        return (parenthesis ? "(" : "") + numerator.getValue() + "/" + denominator.getValue() + (parenthesis ? ")" : "");
     }
 
     @Override
@@ -25,11 +32,11 @@ public class FractionValue implements IValue {
     @Override
     public IValue multiply(IValue other) {
         if (other instanceof NumberValue) {
-            return new FractionValue(numerator.multiply(other), denominator);
+            return new FractionValue(numerator.multiply(other), denominator, parenthesis);
         } else if (other instanceof FractionValue) {
             FractionValue second = (FractionValue) other;
             return new FractionValue(numerator.multiply(second.numerator),
-                    denominator.multiply(second.denominator));
+                    denominator.multiply(second.denominator), parenthesis);
         }
         throw new IllegalArgumentException(NumberValue.UNIMPLEMENTED_OPERATION);
     }
@@ -42,12 +49,12 @@ public class FractionValue implements IValue {
     @Override
     public IValue add(IValue other) {
         if (other instanceof NumberValue) {
-            return new FractionValue(numerator.add(denominator.multiply(other)), denominator);
+            return new FractionValue(numerator.add(denominator.multiply(other)), denominator, parenthesis);
         } else if (other instanceof FractionValue) {
             FractionValue otherFraction = (FractionValue) other;
             return new FractionValue(numerator.multiply(otherFraction.denominator)
                     .add(otherFraction.numerator.multiply(denominator)),
-                    denominator.multiply(otherFraction.denominator));
+                    denominator.multiply(otherFraction.denominator), parenthesis);
         }
         throw new IllegalArgumentException(NumberValue.UNIMPLEMENTED_OPERATION);
     }

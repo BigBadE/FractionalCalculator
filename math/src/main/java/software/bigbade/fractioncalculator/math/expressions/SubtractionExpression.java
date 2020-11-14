@@ -20,9 +20,6 @@ public final class SubtractionExpression implements IExpression {
     private final boolean parentheses;
 
     @Getter
-    private boolean finished = false;
-
-    @Getter
     @Setter
     private int valueIndex = -1;
 
@@ -33,14 +30,14 @@ public final class SubtractionExpression implements IExpression {
 
     @Override
     public IValue operate(AnswerConsumer consumer) {
-        consumer.printText("Subtract " + values.get(valueIndex+1).getValue(values) + " from "
-                + values.get(valueIndex).getValue(values) + ":");
-        return subtractNumbers(values.get(valueIndex), values.get(valueIndex+1));
+        consumer.printText("Subtract " + values.get(valueIndex+1).getValue() + " from "
+                + values.get(valueIndex).getValue() + ":");
+        return values.get(valueIndex).subtract(values.get(valueIndex+1));
     }
 
     @Override
     public String toString(List<IValue> values) {
-        return (parentheses ? "(" : "") + values.get(valueIndex).getValue(values) + " - " + values.get(valueIndex+1).getValue(values) + (parentheses ? ")" : "");
+        return (parentheses ? "(" : "") + values.get(valueIndex).getValue() + " - " + values.get(valueIndex+1).getValue() + (parentheses ? ")" : "");
     }
 
     @Override
@@ -50,10 +47,5 @@ public final class SubtractionExpression implements IExpression {
         if(texts.size() != valueIndex+1) {
             texts.get(valueIndex + 1).render(consumer);
         }
-    }
-
-    public IValue subtractNumbers(IValue first, IValue second) {
-        finished = true;
-        return first.subtract(second);
     }
 }

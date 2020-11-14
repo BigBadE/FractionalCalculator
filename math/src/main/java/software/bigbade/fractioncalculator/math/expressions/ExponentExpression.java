@@ -20,9 +20,6 @@ public class ExponentExpression implements IExpression {
     private final boolean parenthesis;
 
     @Getter
-    private boolean finished = false;
-
-    @Getter
     @Setter
     private int valueIndex = -1;
 
@@ -33,11 +30,10 @@ public class ExponentExpression implements IExpression {
 
     @Override
     public IValue operate(AnswerConsumer consumer) {
-        finished = true;
         IValue firstValue = values.get(valueIndex);
         IValue secondValue = values.get(valueIndex+1);
-        consumer.printText(firstValue.getValue(values) + " to the power of "
-                + secondValue.getValue(values) + ":");
+        consumer.printText(firstValue.getValue() + " to the power of "
+                + secondValue.getValue() + ":");
         return firstValue.divide(secondValue);
     }
 
@@ -46,7 +42,7 @@ public class ExponentExpression implements IExpression {
         IValue firstValue = values.get(valueIndex);
         IValue secondValue = values.get(valueIndex+1);
         StringBuilder builder = new StringBuilder(parenthesis ? "(" : "");
-        builder.append(firstValue.getValue(values)).append("^").append(secondValue.getValue(values));
+        builder.append(firstValue.getValue()).append("^").append(secondValue.getValue());
         if(parenthesis) {
             builder.append(')');
         }

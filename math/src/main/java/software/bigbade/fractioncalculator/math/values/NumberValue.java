@@ -2,11 +2,9 @@ package software.bigbade.fractioncalculator.math.values;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import software.bigbade.fractioncalculator.math.expressions.MultiplicationExpression;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.util.List;
 
 @RequiredArgsConstructor
 public class NumberValue implements IValue {
@@ -16,9 +14,12 @@ public class NumberValue implements IValue {
     private final BigDecimal numericValue;
 
     @Override
-    public String getValue(List<IValue> valueList) {
-        //Round non-integers really close to a whole numbers to a whole number. It should always be whole,
-        //but just in case round it.
+    public BigDecimal getDecimalValue() {
+        return numericValue;
+    }
+
+    @Override
+    public String getValue() {
         return numericValue.toString();
     }
 
@@ -56,7 +57,7 @@ public class NumberValue implements IValue {
             return new NumberValue(numericValue.divide(((NumberValue) other).numericValue, MathContext.DECIMAL32));
         } else if (other instanceof FractionValue) {
             FractionValue otherFraction = (FractionValue) other;
-            return new FractionValue(otherFraction.getDenominator().multiply(this), otherFraction.getNumerator());
+            return new FractionValue(otherFraction.getDenominator().multiply(this), otherFraction.getNumerator(), false);
         }
         throw new IllegalArgumentException(UNIMPLEMENTED_OPERATION);
     }

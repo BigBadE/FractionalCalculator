@@ -15,8 +15,6 @@ public interface IExpression {
 
     int getValueIndex();
 
-    boolean isFinished();
-
     IValue operate(AnswerConsumer consumer);
 
     String toString(List<IValue> values);

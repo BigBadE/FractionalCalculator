@@ -19,6 +19,7 @@ DIVISION
 | '÷';
 POWER: '^';
 EQUALS: '=';
+UNDERSCORE: '_';
 
 //Other symbols
 PI

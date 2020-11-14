@@ -6,7 +6,6 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.slf4j.Logger;
 import software.bigbade.fractioncalculator.generated.FractionLexer;
 import software.bigbade.fractioncalculator.generated.FractionParser;
 import software.bigbade.fractioncalculator.math.AnswerConsumer;
@@ -21,7 +20,6 @@ import java.util.Set;
 
 @RequiredArgsConstructor
 public class FractionCalculatorParser {
-    private final Logger logger;
     private final CalculatorParserListener listener = new CalculatorParserListener();
     @Getter
     private List<IValue> values = Collections.emptyList();
@@ -67,9 +65,7 @@ public class FractionCalculatorParser {
             IExpression expression = iterator.next();
             listener.setValue(expression.operate(consumer), expression.getValueIndex());
             listener.removeValue(expression.getValueIndex() + 1);
-            if (expression.isFinished()) {
-                iterator.remove();
-            }
+            iterator.remove();
             consumer.printEquation(listener.getExpressions(), listener.getValues());
         }
 

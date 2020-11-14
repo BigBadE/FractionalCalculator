@@ -12,3 +12,5 @@ If you have gradle that isn't necessary, but make sure you are running Gradle 6
     - Parses String equation to a set of values/expressions using ANTLR4
 - math
     - Handles mathematical expressions on values, provides value types, and renders values using an AnswerConsumer
+- console-input
+    - main-input with no GUI

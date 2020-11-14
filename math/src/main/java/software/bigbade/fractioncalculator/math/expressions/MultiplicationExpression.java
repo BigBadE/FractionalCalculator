@@ -22,9 +22,6 @@ public class MultiplicationExpression implements IExpression {
     private final boolean parenthesis;
 
     @Getter
-    private boolean finished = false;
-
-    @Getter
     @Setter
     private int valueIndex = -1;
 
@@ -35,11 +32,10 @@ public class MultiplicationExpression implements IExpression {
 
     @Override
     public IValue operate(AnswerConsumer consumer) {
-        finished = true;
         IValue firstValue = values.get(valueIndex);
         IValue secondValue = values.get(valueIndex+1);
-        consumer.printText("Multiply " + firstValue.getValue(values) + " by "
-                + secondValue.getValue(values) + ":");
+        consumer.printText("Multiply " + firstValue.getValue() + " by "
+                + secondValue.getValue() + ":");
         return firstValue.multiply(secondValue);
     }
 
@@ -49,11 +45,11 @@ public class MultiplicationExpression implements IExpression {
         IValue secondValue = values.get(valueIndex+1);
         StringBuilder builder = new StringBuilder(parenthesis ? "(" : "");
         if(firstValue instanceof NumberValue && secondValue instanceof NumberValue) {
-            builder.append(firstValue.getValue(values)).append("×").append(secondValue.getValue(values));
+            builder.append(firstValue.getValue()).append("×").append(secondValue.getValue());
         } else if(firstValue instanceof NumberValue && secondValue instanceof FractionValue) {
-            builder.append(firstValue.getValue(values)).append('(').append(secondValue.getValue(values)).append(')');
+            builder.append(firstValue.getValue()).append('(').append(secondValue.getValue()).append(')');
         } else {
-            builder.append(secondValue.getValue(values)).append('(').append(firstValue.getValue(values)).append(')');
+            builder.append(secondValue.getValue()).append('(').append(firstValue.getValue()).append(')');
         }
         if(parenthesis) {
             builder.append(')');

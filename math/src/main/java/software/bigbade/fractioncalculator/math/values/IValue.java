@@ -1,12 +1,14 @@
 package software.bigbade.fractioncalculator.math.values;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 /**
  * A value, such as a fraction, number, or variable
  */
 public interface IValue {
-    String getValue(List<IValue> values);
+    BigDecimal getDecimalValue();
+
+    String getValue();
 
     IValue add(IValue other);
 

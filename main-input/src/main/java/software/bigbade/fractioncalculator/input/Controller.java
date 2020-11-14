@@ -108,7 +108,7 @@ public class Controller {
     public void updateCurrentEquation(int current) {
         currentEquation.setText("(" + current + "/" + previousOutputs.size() + ")");
 
-        FractionCalculatorParser parser = new FractionCalculatorParser(FractionCalculator.getLogger());
+        FractionCalculatorParser parser = new FractionCalculatorParser();
 
         FractionCalculator.getLogger().info("Calculating " + canvas.getText());
         parser.parse(previousOutputs.get(current - 1));
