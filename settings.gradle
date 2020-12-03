@@ -1,6 +1,8 @@
 rootProject.name = 'FractionalCalculator'
 include(':main-input')
 project(':main-input').projectDir = file('main-input')
+include(':antlr-parser')
+project(':antlr-parser').projectDir = file('antlr-parser')
 include(':parser')
 project(':parser').projectDir = file('parser')
 include(':math')

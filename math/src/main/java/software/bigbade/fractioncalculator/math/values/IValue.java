@@ -17,4 +17,14 @@ public interface IValue {
     IValue multiply(IValue other);
 
     IValue divide(IValue other);
+
+    IValue exponent(IValue other);
+
+    /**
+     * Functions like any other compare method
+     * @see Integer#compare(int, int)
+     * @param other Other value
+     * @return -1, 0, or 1.
+     */
+    int compare(IValue other);
 }

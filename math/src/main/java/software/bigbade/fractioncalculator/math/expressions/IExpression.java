@@ -7,9 +7,13 @@ import software.bigbade.fractioncalculator.math.values.IValue;
 import java.util.List;
 
 public interface IExpression {
+    int getIndex();
+
     int getPriority();
 
-    int getIndex();
+    default int getUsedValues() {
+        return 2;
+    }
 
     void setValueIndex(int index);
 
@@ -18,6 +22,8 @@ public interface IExpression {
     IValue operate(AnswerConsumer consumer);
 
     String toString(List<IValue> values);
+
+    boolean shouldDrawEquation();
 
     void draw(List<IText> texts, AnswerConsumer consumer);
 }

@@ -1,7 +1,6 @@
 package software.bigbade.fractioncalculator.math.expressions;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import software.bigbade.fractioncalculator.math.AnswerConsumer;
 import software.bigbade.fractioncalculator.math.graphics.IText;
@@ -11,23 +10,27 @@ import software.bigbade.fractioncalculator.math.values.NumberValue;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 public class MultiplicationExpression implements IExpression {
     private final List<IValue> values;
+
+    @Getter
+    private final int priority;
+
+    @Getter
+    private final boolean parentheses;
 
     @Getter
     private final int index;
 
     @Getter
-    private final boolean parenthesis;
-
-    @Getter
     @Setter
     private int valueIndex = -1;
 
-    @Override
-    public int getPriority() {
-        return parenthesis ? 3 : 1;
+    public MultiplicationExpression(List<IValue> values, int index, int parentheses, boolean isParenthesized) {
+        this.values = values;
+        this.parentheses = isParenthesized;
+        this.index = index;
+        this.priority = (parentheses >> 25 << 1) + 524289 + (index & 524287);
     }
 
     @Override
@@ -43,7 +46,7 @@ public class MultiplicationExpression implements IExpression {
     public String toString(List<IValue> values) {
         IValue firstValue = values.get(valueIndex);
         IValue secondValue = values.get(valueIndex+1);
-        StringBuilder builder = new StringBuilder(parenthesis ? "(" : "");
+        StringBuilder builder = new StringBuilder(parentheses ? "(" : "");
         if(firstValue instanceof NumberValue && secondValue instanceof NumberValue) {
             builder.append(firstValue.getValue()).append("×").append(secondValue.getValue());
         } else if(firstValue instanceof NumberValue && secondValue instanceof FractionValue) {
@@ -51,10 +54,15 @@ public class MultiplicationExpression implements IExpression {
         } else {
             builder.append(secondValue.getValue()).append('(').append(firstValue.getValue()).append(')');
         }
-        if(parenthesis) {
+        if(parentheses) {
             builder.append(')');
         }
         return builder.toString();
+    }
+
+    @Override
+    public boolean shouldDrawEquation() {
+        return true;
     }
 
     @Override

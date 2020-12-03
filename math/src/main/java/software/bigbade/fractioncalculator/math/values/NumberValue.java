@@ -56,9 +56,30 @@ public class NumberValue implements IValue {
     @Override
     public IValue divide(IValue other) {
         if (other instanceof NumberValue) {
-            return new NumberValue(numericValue.divide(((NumberValue) other).numericValue, MathContext.DECIMAL32));
+            NumberValue otherNumber = (NumberValue) other;
+            if(otherNumber.getDecimalValue().compareTo(BigDecimal.ZERO) == 0) {
+                throw new IllegalArgumentException("Can't divide by 0!");
+            }
+            return new NumberValue(numericValue.divide(otherNumber.numericValue, MathContext.DECIMAL32));
         } else if (other instanceof FractionValue || other instanceof MixedNumberValue) {
             return other.divide(this);
+        }
+        throw new IllegalArgumentException(UNIMPLEMENTED_OPERATION);
+    }
+
+    @Override
+    public IValue exponent(IValue other) {
+        //TODO
+        throw new IllegalArgumentException(UNIMPLEMENTED_OPERATION);
+    }
+
+    @Override
+    public int compare(IValue other) {
+        if (other instanceof NumberValue) {
+            NumberValue otherNumber = (NumberValue) other;
+            return numericValue.compareTo(otherNumber.getDecimalValue());
+        } else if (other instanceof FractionValue || other instanceof MixedNumberValue) {
+            return other.compare(this);
         }
         throw new IllegalArgumentException(UNIMPLEMENTED_OPERATION);
     }

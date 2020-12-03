@@ -142,6 +142,11 @@ public class LatexDrawing implements AnswerConsumer {
         }
     }
 
+    @Override
+    public void printAnswer(Set<IExpression> expressions, List<IValue> values) {
+        printEquation(expressions, values);
+    }
+
     public IText parseValue(List<IValue> values, IValue value) {
         if (value instanceof FractionValue) {
             FractionValue fractionValue = (FractionValue) value;

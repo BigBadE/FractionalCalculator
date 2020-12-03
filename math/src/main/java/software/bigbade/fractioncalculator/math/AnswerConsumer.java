@@ -32,4 +32,6 @@ public interface AnswerConsumer {
     void drawLine(double x1, double y1, double x2, double y2);
 
     void printEquation(Set<IExpression> expressions, List<IValue> values);
+
+    void printAnswer(Set<IExpression> expressions, List<IValue> values);
 }
