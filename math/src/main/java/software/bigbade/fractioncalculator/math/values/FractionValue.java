@@ -2,11 +2,14 @@ package software.bigbade.fractioncalculator.math.values;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import software.bigbade.fractioncalculator.math.simplification.SimplifyZeroFractions;
 
 import java.math.BigDecimal;
 
 @RequiredArgsConstructor
 public class FractionValue implements IValue {
+    public static final IValue ONE = new NumberValue(BigDecimal.ONE);
+
     @Getter
     private final IValue numerator;
     @Getter
@@ -45,7 +48,10 @@ public class FractionValue implements IValue {
         if(other instanceof NumberValue) {
             return new FractionValue(numerator.subtract(denominator.multiply(other)), denominator, parenthesis);
         } else if(other instanceof FractionValue) {
-            //TODO
+            FractionValue otherFraction = (FractionValue) other;
+            return new FractionValue(numerator.multiply(otherFraction.denominator)
+                    .subtract(otherFraction.numerator.multiply(denominator)),
+                    denominator.multiply(otherFraction.denominator), parenthesis);
         } else if(other instanceof MixedNumberValue) {
             return other.subtract(this);
         }
@@ -71,11 +77,29 @@ public class FractionValue implements IValue {
         if(other instanceof NumberValue) {
             return new FractionValue(getDenominator().multiply(other), getNumerator(), false);
         } else if(other instanceof FractionValue) {
-            //TODO
+            FractionValue fractionValue = (FractionValue) other;
+            return new FractionValue(getNumerator().multiply(fractionValue.getDenominator()),
+                    getDenominator().multiply(fractionValue.getNumerator()), false);
         } else if(other instanceof MixedNumberValue) {
             return other.divide(this);
         }
         throw new IllegalArgumentException(NumberValue.UNIMPLEMENTED_OPERATION);
+    }
+
+    @Override
+    public IValue modulo(IValue other) {
+        return other.subtract(multiply(divide(other).floor()));
+    }
+
+    @Override
+    public IValue floor() {
+        IValue current = ONE;
+        int change = compare(SimplifyZeroFractions.ZERO);
+        IValue temp;
+        while ((temp = current.multiply(denominator)).compare(numerator) == change) {
+            current = temp;
+        }
+        return current;
     }
 
     @Override
@@ -84,8 +108,47 @@ public class FractionValue implements IValue {
     }
 
     @Override
+    public IValue abs() {
+        return new FractionValue(numerator.abs(), denominator.abs(), parenthesis);
+    }
+
+    @Override
+    public IValue gcd(IValue other) {
+        FractionValue fractionValue;
+        if(other instanceof NumberValue) {
+            fractionValue = new FractionValue(other, ONE, false);
+        } else if(other instanceof FractionValue) {
+            fractionValue = (FractionValue) other;
+        } else {
+            return other.gcd(this);
+        }
+        return numerator.gcd(fractionValue.getNumerator()).divide(denominator.lcm(fractionValue.getDenominator()));
+    }
+
+    @Override
+    public IValue lcm(IValue other) {
+        FractionValue fractionValue;
+        if(other instanceof NumberValue) {
+            fractionValue = new FractionValue(other, ONE, false);
+        } else if(other instanceof FractionValue) {
+            fractionValue = (FractionValue) other;
+        } else {
+            return other.gcd(this);
+        }
+        return numerator.lcm(fractionValue.getNumerator()).divide(denominator.gcd(fractionValue.getDenominator()));
+    }
+
+    @Override
     public int compare(IValue other) {
-        //TODO
-        return 0;
+        if(other instanceof NumberValue) {
+            return denominator.compare(other.multiply(numerator));
+        } else if(other instanceof FractionValue) {
+            FractionValue fractionValue = (FractionValue) other;
+            return numerator.multiply(fractionValue.getDenominator())
+                    .compare(denominator.multiply(fractionValue.getNumerator()));
+        } else if(other instanceof MixedNumberValue) {
+            return other.compare(this);
+        }
+        throw new IllegalArgumentException(NumberValue.UNIMPLEMENTED_OPERATION);
     }
 }

@@ -56,6 +56,31 @@ public class MixedNumberValue implements IValue {
     }
 
     @Override
+    public IValue abs() {
+        return new MixedNumberValue((NumberValue) number.abs(), (FractionValue) fraction.abs(), parenthesis);
+    }
+
+    @Override
+    public IValue gcd(IValue other) {
+        return convertToImproperFraction(this).gcd(other);
+    }
+
+    @Override
+    public IValue lcm(IValue other) {
+        return convertToImproperFraction(this).lcm(other);
+    }
+
+    @Override
+    public IValue modulo(IValue other) {
+        return convertToImproperFraction(this).modulo(other);
+    }
+
+    @Override
+    public IValue floor() {
+        return convertToImproperFraction(this).floor();
+    }
+
+    @Override
     public int compare(IValue other) {
         return convertToImproperFraction(this).compare(other);
     }

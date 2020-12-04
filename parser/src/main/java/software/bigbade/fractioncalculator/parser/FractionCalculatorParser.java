@@ -6,7 +6,10 @@ import software.bigbade.fractioncalculator.math.AnswerConsumer;
 import software.bigbade.fractioncalculator.math.expressions.IExpression;
 import software.bigbade.fractioncalculator.math.simplification.DividingNegativesIsPositive;
 import software.bigbade.fractioncalculator.math.simplification.ISimplifier;
+import software.bigbade.fractioncalculator.math.simplification.SimplifyFractionsInFractions;
+import software.bigbade.fractioncalculator.math.simplification.SimplifyFractionsWithLCD;
 import software.bigbade.fractioncalculator.math.simplification.SimplifyImproperFractions;
+import software.bigbade.fractioncalculator.math.simplification.SimplifyMixedNumberFractions;
 import software.bigbade.fractioncalculator.math.simplification.SimplifyZeroFractions;
 import software.bigbade.fractioncalculator.math.values.IValue;
 import software.bigbade.fractioncalculator.parser.listener.CalculatorParserListener;
@@ -22,6 +25,9 @@ public class FractionCalculatorParser {
     private final CalculatorParserListener listener = new CalculatorParserListener();
 
     private final List<ISimplifier> simplifiers = Arrays.asList(new DividingNegativesIsPositive(),
+            new SimplifyMixedNumberFractions(),
+            new SimplifyFractionsInFractions(),
+            new SimplifyFractionsWithLCD(),
             new SimplifyImproperFractions(),
             new SimplifyZeroFractions());
 
@@ -53,7 +59,7 @@ public class FractionCalculatorParser {
         while (iterator.hasNext()) {
             IExpression expression = iterator.next();
             listener.getNumberHandler().setValue(expression.operate(consumer), expression.getValueIndex());
-            for(int i = expression.getUsedValues()-1; i > 0; i--) {
+            for (int i = expression.getUsedValues() - 1; i > 0; i--) {
                 listener.getExpressionHandler().removeValue(expression.getValueIndex() + i);
             }
             iterator.remove();
@@ -73,16 +79,24 @@ public class FractionCalculatorParser {
         boolean found = true;
         while (found && tries < 5) {
             found = false;
-            for (ISimplifier simplifier : simplifiers) {
-                for (int i = 0; i < values.size(); i++) {
-                    IValue value = values.get(i);
-                    if (simplifier.matches(value)) {
-                        values.set(i, simplifier.simplify(value, consumer));
-                        found = true;
-                        tries++;
-                    }
+            for (int i = 0; i < values.size(); i++) {
+                if(simplifyValue(consumer, i)) {
+                    tries++;
+                    found = true;
+                    break;
                 }
             }
         }
+    }
+
+    private boolean simplifyValue(AnswerConsumer consumer, int i) {
+        for (ISimplifier simplifier : simplifiers) {
+            IValue value = values.get(i);
+            if (simplifier.matches(value)) {
+                values.set(i, simplifier.simplify(value, consumer));
+                return true;
+            }
+        }
+        return false;
     }
 }

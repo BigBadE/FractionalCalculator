@@ -33,13 +33,11 @@ public class CalculatorParserListener {
         boolean inNumber = true;
         StringBuilder current = new StringBuilder();
         for (char character : line.toCharArray()) {
-            if (character >= '0' && character <= '9' || character == '-' && expression > 0) {
-                if (!inNumber) {
-                    inNumber = true;
-                }
-                current.append(character);
+            if(checkNumber(current, character, expression)) {
+                inNumber = true;
                 continue;
             }
+
             if (inNumber) {
                 expression--;
                 inNumber = false;
@@ -48,7 +46,9 @@ public class CalculatorParserListener {
                 updateExpression(expression);
             }
             int change = parseCharacter(inParenthesis, character, expression, parenthesis);
-            expression = expressionHandler.getCurrent().getUsedValues()-1;
+            if(expressionHandler.getCurrent() != null && expression == 0) {
+                expression = expressionHandler.getCurrent().getUsedValues() - 1;
+            }
             parenthesis += change;
             inParenthesis = (change == 1);
         }
@@ -59,6 +59,14 @@ public class CalculatorParserListener {
         } else if (expression == 0) {
             expressionHandler.endExpression();
         }
+    }
+
+    private static boolean checkNumber(StringBuilder current, char character, int expression) {
+        if (character >= '0' && character <= '9' || character == '-' && expression > 0) {
+            current.append(character);
+            return true;
+        }
+        return false;
     }
 
     private void updateExpression(int expression) {

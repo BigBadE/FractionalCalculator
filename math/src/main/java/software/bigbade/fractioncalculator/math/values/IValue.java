@@ -20,6 +20,16 @@ public interface IValue {
 
     IValue exponent(IValue other);
 
+    IValue abs();
+
+    IValue gcd(IValue other);
+
+    IValue lcm(IValue other);
+
+    IValue modulo(IValue other);
+
+    IValue floor();
+
     /**
      * Functions like any other compare method
      * @see Integer#compare(int, int)

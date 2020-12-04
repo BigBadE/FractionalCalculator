@@ -29,7 +29,7 @@ public class DivisionExpression implements IExpression {
         this.values = values;
         this.parentheses = isParenthesized;
         this.index = index;
-        this.priority = (parentheses >> 25 << 1) + 524289 + (index & 524287);
+        this.priority = (parentheses >>> 25 << 1) + 524289 + (index & 524287);
     }
 
     @Override

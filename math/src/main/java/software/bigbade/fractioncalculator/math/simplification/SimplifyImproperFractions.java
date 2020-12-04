@@ -23,6 +23,11 @@ public class SimplifyImproperFractions implements ISimplifier {
             fractionValue = new FractionValue(fractionValue.getNumerator().multiply(DividingNegativesIsPositive.NEGATIVE_ONE),
                     fractionValue.getDenominator(), fractionValue.isParenthesis());
         }
+        if(fractionValue.getDenominator().compare(SimplifyZeroFractions.ZERO) < 0) {
+            fractionValue = new FractionValue(fractionValue.getNumerator(),
+                    fractionValue.getDenominator().multiply(DividingNegativesIsPositive.NEGATIVE_ONE),
+                    fractionValue.isParenthesis());
+        }
         return fractionValue.getNumerator().compare(fractionValue.getDenominator()) >= 0;
     }
 
@@ -40,6 +45,10 @@ public class SimplifyImproperFractions implements ISimplifier {
             consumer.printText("Simplify " + value.getValue() + " to " + output[0].toString());
             return new NumberValue(output[0]);
         } else {
+            if(fractionValue.getDenominator().compare(SimplifyZeroFractions.ZERO) < 0) {
+                fractionValue = new FractionValue(fractionValue.getNumerator(),
+                        fractionValue.getDenominator().multiply(DividingNegativesIsPositive.NEGATIVE_ONE), false);
+            }
             consumer.printText("Convert " + value.getValue() + " to a mixed number");
             consumer.printText("Divide " + fractionValue.getNumerator().getValue() + " by "
                     + fractionValue.getDenominator().getValue()
