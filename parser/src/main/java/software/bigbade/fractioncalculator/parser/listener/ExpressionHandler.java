@@ -151,61 +151,6 @@ class BlankAnswerConsumer implements AnswerConsumer {
     }
 
     @Override
-    public void drawText(String text) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void drawText(String text, int xOffset, int yOffset) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void drawTextNoOffset(String text, int xOffset, int yOffset) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public double getTextSize() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public double getTextWidth(String text) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public double getXOffset() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setXOffset(double x) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public double getYOffset() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setYOffset(double y) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void setTextSize(double size) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void drawLine(double x1, double y1, double x2, double y2) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public void printEquation(Set<BasicExpression> expressions, List<IValue> values) {
         throw new UnsupportedOperationException();
     }
