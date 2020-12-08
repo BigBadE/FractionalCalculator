@@ -11,6 +11,9 @@ import java.math.BigDecimal;
 public class DividingNegativesIsPositive implements ISimplifier {
     public static final IValue NEGATIVE_ONE = new NumberValue(BigDecimal.valueOf(-1));
 
+    /**
+     * @return true if the fraction (or mixed number) has a negative in the numerator and denominator.
+     */
     @Override
     public boolean matches(IValue value) {
         FractionValue fractionValue;
@@ -25,22 +28,14 @@ public class DividingNegativesIsPositive implements ISimplifier {
                 && fractionValue.getDenominator().compare(SimplifyZeroFractions.ZERO) < 0);
     }
 
+    /**
+     * @return absolute value of the input, because it is positive.
+     */
     @Override
     public IValue simplify(IValue value, AnswerConsumer consumer) {
-        FractionValue fractionValue;
-        if (value instanceof FractionValue) {
-            fractionValue = (FractionValue) value;
-        } else {
-            fractionValue = ((MixedNumberValue) value).getFraction();
-        }
-        IValue answer = new FractionValue(fractionValue.getNumerator().multiply(NEGATIVE_ONE),
-                fractionValue.getDenominator().multiply(NEGATIVE_ONE), fractionValue.isParenthesis());
-        consumer.printText("Dividing negatives is same as dividing positives, so " + value.getValue()
-                + " simplifies to " + answer.getValue());
-        if(value instanceof MixedNumberValue) {
-            MixedNumberValue mixedNumberValue = (MixedNumberValue) value;
-            answer = new MixedNumberValue(mixedNumberValue.getNumber(), (FractionValue) answer, false);
-        }
-        return answer;
+        IValue answer = value.abs();
+        consumer.printText("Dividing negatives is the same as dividing positives, so " + value.toString()
+                + " simplifies to " + answer.toString());
+        return answer.abs();
     }
 }

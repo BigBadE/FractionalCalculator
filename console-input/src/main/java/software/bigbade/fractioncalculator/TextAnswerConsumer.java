@@ -2,7 +2,7 @@ package software.bigbade.fractioncalculator;
 
 import lombok.Getter;
 import software.bigbade.fractioncalculator.math.AnswerConsumer;
-import software.bigbade.fractioncalculator.math.expressions.IExpression;
+import software.bigbade.fractioncalculator.math.expressions.BasicExpression;
 import software.bigbade.fractioncalculator.math.values.IValue;
 
 import java.util.ArrayList;
@@ -79,34 +79,28 @@ public class TextAnswerConsumer implements AnswerConsumer {
     }
 
     @Override
-    public void printEquation(Set<IExpression> expressions, List<IValue> values) {
+    public void printEquation(Set<BasicExpression> expressions, List<IValue> values) {
         System.out.println(getEquationAsText(expressions, values));
     }
 
     @Override
-    public void printAnswer(Set<IExpression> expressions, List<IValue> values) {
+    public void printAnswer(Set<BasicExpression> expressions, List<IValue> values) {
         answer = getEquationAsText(expressions, values);
         System.out.println(answer);
     }
 
-    private static String getEquationAsText(Set<IExpression> expressions, List<IValue> values) {
-        List<IExpression> sortedExpressions = new ArrayList<>(expressions);
-        sortedExpressions.sort(Comparator.comparingInt(IExpression::getIndex));
+    private static String getEquationAsText(Set<BasicExpression> expressions, List<IValue> values) {
+        List<BasicExpression> sortedExpressions = new ArrayList<>(expressions);
+        sortedExpressions.sort(Comparator.comparingInt(BasicExpression::getIndex));
         if(values.size() == 1) {
-            return values.get(0).getValue();
+            return values.get(0).toString();
         }
 
         //Adding strings compile to a StringBuilder anyways.
         StringBuilder builder = new StringBuilder();
-        int lastValue = -1;
 
-        for(IExpression expression : sortedExpressions) {
-            String adding = expression.toString(values);
-            if(lastValue == expression.getValueIndex()) {
-                adding = adding.substring(values.get(expression.getValueIndex()+expression.getUsedValues()-1).getValue().length());
-            }
-            builder.append(adding);
-            lastValue = expression.getValueIndex()+expression.getUsedValues()-1;
+        for(BasicExpression expression : sortedExpressions) {
+            builder.append(expression.toString(sortedExpressions, values));
         }
         return builder.toString();
     }

@@ -8,8 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import lombok.Getter;
-import software.bigbade.fractioncalculator.FractionCalculator;
-import software.bigbade.fractioncalculator.parser.FractionCalculatorParser;
+import software.bigbade.fractioncalculator.parser.FractionCalculator;
 import software.bigbade.fractioncalculator.rendering.LatexDrawing;
 
 import java.util.Map;
@@ -108,9 +107,9 @@ public class Controller {
     public void updateCurrentEquation(int current) {
         currentEquation.setText("(" + current + "/" + previousOutputs.size() + ")");
 
-        FractionCalculatorParser parser = new FractionCalculatorParser();
+        FractionCalculator parser = new FractionCalculator();
 
-        FractionCalculator.getLogger().info("Calculating " + canvas.getText());
+        software.bigbade.fractioncalculator.FractionCalculator.getLogger().info("Calculating " + canvas.getText());
         parser.parse(previousOutputs.get(current - 1));
         LatexDrawing drawing = new LatexDrawing(outputCanvas, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
         drawing.clear();

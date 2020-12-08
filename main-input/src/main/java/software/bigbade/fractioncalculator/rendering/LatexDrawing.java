@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import software.bigbade.fractioncalculator.input.LatexCanvas;
 import software.bigbade.fractioncalculator.math.AnswerConsumer;
-import software.bigbade.fractioncalculator.math.expressions.IExpression;
+import software.bigbade.fractioncalculator.math.expressions.BasicExpression;
 import software.bigbade.fractioncalculator.math.graphics.IText;
 import software.bigbade.fractioncalculator.math.values.FractionValue;
 import software.bigbade.fractioncalculator.math.values.IValue;
@@ -111,24 +111,24 @@ public class LatexDrawing implements AnswerConsumer {
     }
 
     @Override
-    public void printEquation(Set<IExpression> expressions, List<IValue> values) {
+    public void printEquation(Set<BasicExpression> expressions, List<IValue> values) {
         xOffset = 4;
         if(values.isEmpty()) {
             return;
         }
 
         if (values.size() == 1 && expressions.isEmpty()) {
-            printText(values.get(0).getValue());
+            printText(values.get(0).toString());
         } else {
             List<IText> text = new ArrayList<>();
             for (IValue value : values) {
                 text.add(parseValue(values, value));
             }
-            for (IExpression expression : expressions) {
+            for (BasicExpression expression : expressions) {
                 if(expression.getPriority() == 3) {
                     drawText("(");
                 }
-                expression.draw(text, this);
+                //expression.draw(text, this);
                 if(expression.getPriority() == 3) {
                     drawText(")");
                 }
@@ -143,7 +143,7 @@ public class LatexDrawing implements AnswerConsumer {
     }
 
     @Override
-    public void printAnswer(Set<IExpression> expressions, List<IValue> values) {
+    public void printAnswer(Set<BasicExpression> expressions, List<IValue> values) {
         printEquation(expressions, values);
     }
 
@@ -153,7 +153,7 @@ public class LatexDrawing implements AnswerConsumer {
             return new FractionText(parseValue(values, fractionValue.getNumerator()),
                     parseValue(values, fractionValue.getDenominator()));
         } else {
-            return value == null ? null : new BasicText(value.getValue());
+            return value == null ? null : new BasicText(value.toString());
         }
     }
 }

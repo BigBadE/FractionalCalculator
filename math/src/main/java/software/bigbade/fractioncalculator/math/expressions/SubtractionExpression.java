@@ -1,59 +1,34 @@
 package software.bigbade.fractioncalculator.math.expressions;
 
-import lombok.Getter;
-import lombok.Setter;
 import software.bigbade.fractioncalculator.math.AnswerConsumer;
-import software.bigbade.fractioncalculator.math.graphics.IText;
 import software.bigbade.fractioncalculator.math.values.IValue;
 
 import java.util.List;
 
-public final class SubtractionExpression implements IExpression {
-    private final List<IValue> values;
+/**
+ * Implementation of subtraction
+ */
+public final class SubtractionExpression extends BasicExpression {
+    private static final char[] CHARACTERS = new char[] { '-' };
 
-    @Getter
-    private final int priority;
-
-    @Getter
-    private final boolean parentheses;
-
-    @Getter
-    private final int index;
-
-    public SubtractionExpression(List<IValue> values, int index, int parentheses, boolean isParenthesized) {
-        this.values = values;
-        this.parentheses = isParenthesized;
-        this.index = index;
-        this.priority = (parentheses >>> 25 << 1) + 524288 + (index & 524287);
-    }
-
-    @Getter
-    @Setter
-    private int valueIndex = -1;
-
-    @Override
-    public IValue operate(AnswerConsumer consumer) {
-        consumer.printText("Subtract " + values.get(valueIndex+1).getValue() + " from "
-                + values.get(valueIndex).getValue() + ":");
-        return values.get(valueIndex).subtract(values.get(valueIndex+1));
+    public SubtractionExpression(int index, int parentheses) {
+        super(index, parentheses);
     }
 
     @Override
-    public String toString(List<IValue> values) {
-        return (parentheses ? "(" : "") + values.get(valueIndex).getValue() + " - " + values.get(valueIndex+1).getValue() + (parentheses ? ")" : "");
+    int getOperationPriority() {
+        return 0;
     }
 
     @Override
-    public boolean shouldDrawEquation() {
-        return true;
+    public IValue operate(AnswerConsumer consumer, List<IValue> values) {
+        consumer.printText("Subtract " + values.get(getValueIndex()).toString() + " from "
+                + values.get(getValueIndex() + 1).toString() + ":");
+        return values.get(getValueIndex()).subtract(values.get(getValueIndex() + 1), false);
     }
 
     @Override
-    public void draw(List<IText> texts, AnswerConsumer consumer) {
-        texts.get(valueIndex).render(consumer);
-        consumer.drawText("-");
-        if(texts.size() != valueIndex+1) {
-            texts.get(valueIndex + 1).render(consumer);
-        }
+    char[] getCharacters() {
+        return CHARACTERS;
     }
 }

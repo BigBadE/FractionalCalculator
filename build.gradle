@@ -8,7 +8,7 @@ group 'software.bigbade'
 version '1.0-SNAPSHOT'
 
 dependencies {
-    implementation project(':main-input')
+    implementation project(':console-input')
 }
 
 allprojects {

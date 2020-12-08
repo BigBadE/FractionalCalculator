@@ -8,7 +8,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import lombok.Getter;
-import software.bigbade.fractioncalculator.parser.FractionCalculatorParser;
+import software.bigbade.fractioncalculator.parser.FractionCalculator;
 import software.bigbade.fractioncalculator.rendering.LatexDrawing;
 
 /**
@@ -94,7 +94,7 @@ public class LatexCanvas extends Canvas {
         drawing.clear();
         pane.setContent(this);
         if(text.length() != 0) {
-            FractionCalculatorParser parser = new FractionCalculatorParser();
+            FractionCalculator parser = new FractionCalculator();
             parser.parse(text.toString());
             drawing.printEquation(parser.getExpressions(), parser.getValues());
         }

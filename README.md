@@ -1,9 +1,18 @@
 # FractionalCalculator
 
 # How to build
-The Gradle wrapper is included, run ./gradlew shadowJar to build the jar.
+The Gradle wrapper is included, run ./gradlew clean shadowJar to build the jar.
 
-If you have gradle that isn't necessary, but make sure you are running Gradle 6
+Lombok is used, so if you use IntelliJ without the Lombok plugin,
+
+Go to Build, Execution, Deployment -> Build Tools -> Gradle ->
+
+Build with/Run tests with, and select Gradle not IntelliJ IDEAD
+
+# How to test
+Run ./gradlew clean test --tests "software.bigbade.fractioncalculator.FracCalcTestFinal"
+
+This will run all the tests in FracCalcTestFinal
 
 # Modules
 - main-input

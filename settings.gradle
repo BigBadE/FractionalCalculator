@@ -1,11 +1,13 @@
 rootProject.name = 'FractionalCalculator'
-include(':main-input')
-project(':main-input').projectDir = file('main-input')
-include(':antlr-parser')
-project(':antlr-parser').projectDir = file('antlr-parser')
+
+//include(':main-input')
+//project(':main-input').projectDir = file('main-input')
+
 include(':parser')
 project(':parser').projectDir = file('parser')
+
 include(':math')
 project(':math').projectDir = file('math')
+
 include(':console-input')
 project(':console-input').projectDir = file('console-input')
