@@ -18,8 +18,6 @@ Go to Build, Execution, Deployment -> Build Tools -> Gradle ->
 Build with/Run tests with, and select Gradle not IntelliJ IDEA
 
 # Modules
-- main-input
-    - UI, passes equation to parser. Depends on math for parser output to render. Uses JavaFX.
 - parser
     - Parses String equation to a set of values/expressions using ANTLR4
 - math
