@@ -19,7 +19,7 @@ Build with/Run tests with, and select Gradle not IntelliJ IDEA
 
 # Modules
 - parser
-    - Parses String equation to a set of values/expressions using ANTLR4
+    - Parses String equation to a set of values/expressions
 - math
     - Handles mathematical expressions on values, provides value types, and renders values using an AnswerConsumer
 - console-input
